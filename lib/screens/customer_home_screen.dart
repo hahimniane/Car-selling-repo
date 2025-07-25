@@ -29,7 +29,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
           boxShadow: [
             BoxShadow(

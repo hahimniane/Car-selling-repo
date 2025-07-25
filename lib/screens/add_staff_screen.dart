@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import '../l10n/app_localizations.dart';
 
 class AddStaffScreen extends StatefulWidget {
@@ -16,6 +15,13 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   Future<void> _addStaffMember() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -25,35 +31,65 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
       _isLoading = true;
     });
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
     try {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
+      // Get the Cloud Functions instance
+      final functions = FirebaseFunctions.instance;
+      final callable = functions.httpsCallable('createStaffUser');
 
-      await authProvider.addStaffUser(email, password);
+      // Prepare the data to send to the Cloud Function
+      final data = {
+        'email': _emailController.text.trim(),
+        'firstName': 'Staff', // Default first name
+        'lastName': 'Member', // Default last name  
+        'phoneNumber': '',
+        'role': 'staff',
+      };
+
+      // Call the Cloud Function
+      final result = await callable.call(data);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.staffMemberAddedSuccessfully,
+        final resultData = result.data;
+        if (resultData['success'] == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Staff member added successfully! ${resultData['emailSent'] ? 'Welcome email sent with auto-generated password.' : 'Note: Email sending failed, but user was created.'}',
+              ),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 5),
             ),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context);
+          );
+          Navigator.pop(context);
+        } else {
+          throw Exception(resultData['message'] ?? 'Unknown error occurred');
+        }
       }
     } catch (e) {
       if (mounted) {
+        String errorMessage = 'Failed to add staff member';
+        
+        if (e is FirebaseFunctionsException) {
+          switch (e.code) {
+            case 'unauthenticated':
+              errorMessage = 'You must be logged in to perform this action';
+              break;
+            case 'permission-denied':
+              errorMessage = 'Only admins can create staff accounts';
+              break;
+            case 'invalid-argument':
+              errorMessage = 'Please check all required fields';
+              break;
+            default:
+              errorMessage = e.message ?? 'An error occurred';
+          }
+        }
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              AppLocalizations.of(
-                context,
-              )!.failedToAddStaffMember(e.toString()),
-            ),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
           ),
         );
       }
@@ -73,7 +109,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
         ),
       ),
       child: Scaffold(
@@ -111,6 +147,35 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Info card explaining the process
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.blue.shade200),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color: Colors.blue.shade700,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'A secure password will be auto-generated and sent to the staff member via email.',
+                              style: TextStyle(
+                                color: Colors.blue.shade700,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -128,7 +193,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(
-                            color: Color(0xFF667eea),
+                            color: Color(0xFF1B365D),
                             width: 2,
                           ),
                         ),
@@ -147,52 +212,15 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.password,
-                        hintText:
-                            AppLocalizations.of(
-                              context,
-                            )!.enterTemporaryPassword,
-                        prefixIcon: const Icon(Icons.lock_outlined),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF667eea),
-                            width: 2,
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey.shade50,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                    ),
                     const SizedBox(height: 32),
+                    
                     SizedBox(
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
                         onPressed: _isLoading ? null : _addStaffMember,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF667eea),
+                          backgroundColor: const Color(0xFF1B365D),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

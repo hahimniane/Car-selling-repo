@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       child: Consumer2<LanguageProvider, AuthProvider>(
         builder: (context, languageProvider, authProvider, child) {
           return MaterialApp(
-            title: 'Business Services',
+            title: 'TAAO Auto',
             locale: languageProvider.currentLocale,
             supportedLocales: const [
               Locale('en'), // English
@@ -53,8 +53,13 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+              colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1B365D)),
               useMaterial3: true,
+              primaryColor: const Color(0xFF1B365D),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Color(0xFF1B365D),
+                foregroundColor: Colors.white,
+              ),
             ),
             initialRoute: '/splash',
             routes: {

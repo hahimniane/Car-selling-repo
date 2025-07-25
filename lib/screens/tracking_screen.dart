@@ -50,7 +50,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -117,7 +117,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
                                 children: [
                                   CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      Color(0xFF667eea),
+                                      Color(0xFF1B365D),
                                     ),
                                   ),
                                   SizedBox(height: 16),
@@ -125,7 +125,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
                                     'Loading Maersk Tracking...',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Color(0xFF667eea),
+                                      color: Color(0xFF1B365D),
                                     ),
                                   ),
                                 ],

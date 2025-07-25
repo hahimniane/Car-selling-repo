@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -119,10 +119,14 @@ class _SplashScreenState extends State<SplashScreen>
                                 ),
                               ],
                             ),
-                            child: const Icon(
-                              Icons.business,
-                              size: 60,
-                              color: Colors.white,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(60),
+                              child: Image.asset(
+                                'assets/logo.png',
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                         ),

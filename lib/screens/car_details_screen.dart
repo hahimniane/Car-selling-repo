@@ -33,7 +33,7 @@ class CarDetailsScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -155,7 +155,7 @@ class CarDetailsScreen extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF667eea),
+                                  color: Color(0xFF1B365D),
                                 ),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
@@ -166,7 +166,7 @@ class CarDetailsScreen extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF667eea),
+                                color: Color(0xFF1B365D),
                               ),
                             ),
                           ],
@@ -262,7 +262,7 @@ class CarDetailsScreen extends StatelessWidget {
                                   children: [
                                     const Icon(
                                       Icons.check_circle,
-                                      color: Color(0xFF667eea),
+                                      color: Color(0xFF1B365D),
                                       size: 20,
                                     ),
                                     const SizedBox(width: 12),
@@ -303,7 +303,7 @@ class CarDetailsScreen extends StatelessWidget {
                                 children: [
                                   const Icon(
                                     Icons.phone,
-                                    color: Color(0xFF667eea),
+                                    color: Color(0xFF1B365D),
                                     size: 20,
                                   ),
                                   const SizedBox(width: 12),

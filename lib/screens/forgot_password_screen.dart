@@ -84,7 +84,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -204,7 +204,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: const BorderSide(
-                  color: Color(0xFF667eea),
+                  color: Color(0xFF1B365D),
                   width: 2,
                 ),
               ),
@@ -235,7 +235,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                   onPressed:
                       authProvider.isLoading ? null : _handleResetPassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF667eea),
+                    backgroundColor: const Color(0xFF1B365D),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -274,7 +274,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             style: TextButton.styleFrom(splashFactory: NoSplash.splashFactory),
             child: Text(
               AppLocalizations.of(context)!.backToLogin,
-              style: const TextStyle(color: Color(0xFF667eea), fontSize: 14),
+              style: const TextStyle(color: Color(0xFF1B365D), fontSize: 14),
             ),
           ),
         ],
@@ -321,7 +321,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           child: ElevatedButton(
             onPressed: _goBackToLogin,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF667eea),
+              backgroundColor: const Color(0xFF1B365D),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

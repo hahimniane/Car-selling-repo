@@ -13,7 +13,7 @@ class HomeMenu extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -61,10 +61,14 @@ class HomeMenu extends StatelessWidget {
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(30),
                               ),
-                              child: const Icon(
-                                Icons.business,
-                                size: 30,
-                                color: Colors.white,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Image.asset(
+                                  'assets/logo.png',
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -187,7 +191,7 @@ class _MenuButton extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 60, maxHeight: 80),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF667eea),
+          backgroundColor: const Color(0xFF1B365D),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),

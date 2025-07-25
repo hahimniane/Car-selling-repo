@@ -13,7 +13,7 @@ class TransportCarScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -157,7 +157,7 @@ class TransportCarScreen extends StatelessWidget {
                               height: 56,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF667eea),
+                                  backgroundColor: const Color(0xFF1B365D),
                                   foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
@@ -207,7 +207,7 @@ class _RoundedTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: const BorderSide(color: Color(0xFF1B365D), width: 2),
         ),
         filled: true,
         fillColor: Colors.grey.shade50,

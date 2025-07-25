@@ -46,7 +46,7 @@ class _StaffCarManagementScreenState extends State<StaffCarManagementScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -91,7 +91,7 @@ class _StaffCarManagementScreenState extends State<StaffCarManagementScreen> {
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+                            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
                           ),
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -150,7 +150,7 @@ class _StaffCarManagementScreenState extends State<StaffCarManagementScreen> {
         onPressed: () {
           _showAddCarDialog(context);
         },
-        backgroundColor: const Color(0xFF667eea),
+        backgroundColor: const Color(0xFF1B365D),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
@@ -199,12 +199,12 @@ class _StaffCarManagementScreenState extends State<StaffCarManagementScreen> {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: const Color(0xFF667eea).withOpacity(0.1),
+              color: const Color(0xFF1B365D).withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
               Icons.directions_car,
-              color: Color(0xFF667eea),
+              color: Color(0xFF1B365D),
               size: 30,
             ),
           ),
@@ -236,7 +236,7 @@ class _StaffCarManagementScreenState extends State<StaffCarManagementScreen> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF667eea),
+                    color: Color(0xFF1B365D),
                   ),
                 ),
               ],
@@ -267,7 +267,7 @@ class _StaffCarManagementScreenState extends State<StaffCarManagementScreen> {
                 children: [
                   IconButton(
                     onPressed: () => _editCar(car),
-                    icon: const Icon(Icons.edit, color: Color(0xFF667eea)),
+                    icon: const Icon(Icons.edit, color: Color(0xFF1B365D)),
                     iconSize: 20,
                   ),
                   IconButton(

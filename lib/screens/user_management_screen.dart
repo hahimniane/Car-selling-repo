@@ -53,7 +53,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
         ),
       ),
       child: Scaffold(
@@ -123,7 +123,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                       child: Text(
                         userData['email']?.substring(0, 1).toUpperCase() ?? 'U',
                         style: const TextStyle(
-                          color: Color(0xFF667eea),
+                          color: Color(0xFF1B365D),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -180,7 +180,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             );
           },
           backgroundColor: Colors.white,
-          child: const Icon(Icons.add, color: Color(0xFF667eea)),
+          child: const Icon(Icons.add, color: Color(0xFF1B365D)),
         ),
       ),
     );

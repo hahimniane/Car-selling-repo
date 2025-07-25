@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -127,10 +127,14 @@ class _LoginScreenState extends State<LoginScreen>
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(60),
                               ),
-                              child: const Icon(
-                                Icons.admin_panel_settings,
-                                size: 60,
-                                color: Colors.white,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(60),
+                                child: Image.asset(
+                                  'assets/logo.png',
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 32),
@@ -204,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen>
                                             12,
                                           ),
                                           borderSide: const BorderSide(
-                                            color: Color(0xFF667eea),
+                                            color: Color(0xFF1B365D),
                                             width: 2,
                                           ),
                                         ),
@@ -276,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen>
                                             12,
                                           ),
                                           borderSide: const BorderSide(
-                                            color: Color(0xFF667eea),
+                                            color: Color(0xFF1B365D),
                                             width: 2,
                                           ),
                                         ),
@@ -367,7 +371,7 @@ class _LoginScreenState extends State<LoginScreen>
                                           context,
                                         )!.backToCustomerHome,
                                         style: const TextStyle(
-                                          color: Color(0xFF667eea),
+                                          color: Color(0xFF1B365D),
                                           fontSize: 14,
                                         ),
                                       ),

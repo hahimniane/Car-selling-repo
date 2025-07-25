@@ -125,7 +125,7 @@ class _SellCarsScreenState extends State<SellCarsScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+            colors: [Color(0xFF1B365D), Color(0xFF2C5282)],
           ),
         ),
         child: SafeArea(
@@ -195,10 +195,14 @@ class _SellCarsScreenState extends State<SellCarsScreen> {
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(40),
                               ),
-                              child: const Icon(
-                                Icons.sell,
-                                size: 40,
-                                color: Colors.white,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(40),
+                                child: Image.asset(
+                                  'assets/logo.png',
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -263,7 +267,7 @@ class _SellCarsScreenState extends State<SellCarsScreen> {
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: const BorderSide(
-                                color: Color(0xFF667eea),
+                                color: Color(0xFF1B365D),
                                 width: 2,
                               ),
                             ),
@@ -470,7 +474,7 @@ class _CarCard extends StatelessWidget {
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
-                color: Color(0xFF667eea),
+                color: Color(0xFF1B365D),
               ),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
