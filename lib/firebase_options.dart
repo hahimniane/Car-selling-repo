@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,37 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBrRDTd5w2iWxTIfvsn7ra0xjW7M-iuPN8',
-    appId: '1:577373430777:web:5af70db59c5d49a8125328',
-    messagingSenderId: '577373430777',
-    projectId: 'car-selling-flutter-app',
-    authDomain: 'car-selling-flutter-app.firebaseapp.com',
-    storageBucket: 'car-selling-flutter-app.firebasestorage.app',
+    apiKey: 'AIzaSyCZmFVHYvucKZKNlLbBhTXR7N_-kn5aYVg',
+    appId: '1:924746589221:web:a7afb8faa4c505bcb24bcc',
+    messagingSenderId: '924746589221',
+    projectId: 'abdullahi-sow-project',
+    authDomain: 'abdullahi-sow-project.firebaseapp.com',
+    storageBucket: 'abdullahi-sow-project.firebasestorage.app',
+    measurementId: 'G-2DYS8FNY4Q',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC_dXN5QsR1Dxob1ex8I4y4sXQRGIOah3k',
-    appId: '1:577373430777:android:9a27a422f3d043b6125328',
-    messagingSenderId: '577373430777',
-    projectId: 'car-selling-flutter-app',
-    storageBucket: 'car-selling-flutter-app.firebasestorage.app',
+    apiKey: 'AIzaSyDb8Uj3-HqjkfnnPApOkcC5Hybl10u4nx0',
+    appId: '1:924746589221:android:57932e6fd92e0bdeb24bcc',
+    messagingSenderId: '924746589221',
+    projectId: 'abdullahi-sow-project',
+    storageBucket: 'abdullahi-sow-project.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyABrxCtLot_sX3uXoBxjVmPXa2lrRylo3Y',
-    appId: '1:577373430777:ios:c424208e88aeb2e7125328',
-    messagingSenderId: '577373430777',
-    projectId: 'car-selling-flutter-app',
-    storageBucket: 'car-selling-flutter-app.firebasestorage.app',
-    iosBundleId: 'com.example.myFlutterApp',
+    apiKey: 'AIzaSyCABOADAM_uMtE250P9JykwS_PrMUvewmw',
+    appId: '1:924746589221:ios:2b03e76f1448348ab24bcc',
+    messagingSenderId: '924746589221',
+    projectId: 'abdullahi-sow-project',
+    storageBucket: 'abdullahi-sow-project.firebasestorage.app',
+    iosBundleId: 'com.autosales.corp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyABrxCtLot_sX3uXoBxjVmPXa2lrRylo3Y',
-    appId: '1:577373430777:ios:796aa32cd6a07256125328',
-    messagingSenderId: '577373430777',
-    projectId: 'car-selling-flutter-app',
-    storageBucket: 'car-selling-flutter-app.firebasestorage.app',
-    iosBundleId: 'com.example.myFlutterApp.RunnerTests',
+    apiKey: 'AIzaSyCABOADAM_uMtE250P9JykwS_PrMUvewmw',
+    appId: '1:924746589221:ios:ea7e35d5789c30e4b24bcc',
+    messagingSenderId: '924746589221',
+    projectId: 'abdullahi-sow-project',
+    storageBucket: 'abdullahi-sow-project.firebasestorage.app',
+    iosBundleId: 'com.example.myFlutterApp',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCZmFVHYvucKZKNlLbBhTXR7N_-kn5aYVg',
+    appId: '1:924746589221:web:5480d8ed7f403e3ab24bcc',
+    messagingSenderId: '924746589221',
+    projectId: 'abdullahi-sow-project',
+    authDomain: 'abdullahi-sow-project.firebaseapp.com',
+    storageBucket: 'abdullahi-sow-project.firebasestorage.app',
+    measurementId: 'G-2BNYEGEBR8',
+  );
+
 }
