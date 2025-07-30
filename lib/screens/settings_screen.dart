@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import '../widgets/language_toggle.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import 'login_screen.dart';
+import 'change_password_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,12 +17,16 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   int _tapCount = 0;
   bool _showLoginOption = false;
+  bool _showAdminSetup = false;
 
   void _handleVersionTap() {
     setState(() {
       _tapCount++;
       if (_tapCount >= 5) {
         _showLoginOption = true;
+      }
+      if (_tapCount >= 7) {
+        _showAdminSetup = true;
       }
     });
   }
@@ -31,6 +37,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (mounted) {
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    }
+  }
+
+  Future<void> _setupAdmin() async {
+    try {
+      final functions = FirebaseFunctions.instanceFor(region: 'us-central1');
+      final callable = functions.httpsCallable('setupAdmin');
+      
+      final result = await callable.call({});
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.data['message'] ?? 'Admin setup successful!'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        
+        // Refresh the auth provider to get updated role
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        await authProvider.logout();
+        Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Setup failed: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
     }
   }
 
@@ -53,6 +93,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
+                    // Logo
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          'assets/logo.png',
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         AppLocalizations.of(context)!.settings,
@@ -61,7 +120,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                     const LanguageToggle(),
@@ -118,6 +176,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                 )!.customer,
                                       ),
                                       _buildSettingItem(
+                                        icon: Icons.lock_reset,
+                                        title:
+                                            AppLocalizations.of(
+                                              context,
+                                            )!.changePassword,
+                                        subtitle: AppLocalizations.of(context)!.updateAccountPassword,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => const ChangePasswordScreen(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      _buildSettingItem(
                                         icon: Icons.logout,
                                         title:
                                             AppLocalizations.of(
@@ -158,6 +232,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
 
                         const SizedBox(height: 24),
+
+                        // Hidden Admin Setup Section (appears after 7 taps on version)
+                        if (_showAdminSetup) ...[
+                          _buildSection(
+                            title: "Admin Setup",
+                            children: [
+                              _buildSettingItem(
+                                icon: Icons.admin_panel_settings,
+                                title: "Become Admin",
+                                subtitle: "One-time setup for first admin user",
+                                onTap: _setupAdmin,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                        ],
 
                         // Hidden Login Section (appears after 5 taps on version)
                         if (_showLoginOption) ...[

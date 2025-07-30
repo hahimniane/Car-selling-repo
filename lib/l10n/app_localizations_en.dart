@@ -81,7 +81,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get parkACar => 'Park a Car';
 
   @override
-  String get sendBarrelsToGuinea => 'Send Barrels to Guinea';
+  String get sendBarrelsToGuinea => 'Package Shipping';
 
   @override
   String get transportCarsToGuinea => 'Transport Cars to Guinea';
@@ -167,10 +167,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get staff => 'Staff';
 
   @override
-  String get barrelShippingService => 'Barrel Shipping Service';
+  String get barrelShippingService => 'Package Shipping Service';
 
   @override
-  String get enterShippingDetailsForGuinea => 'Enter shipping details for Guinea';
+  String get enterShippingDetailsForGuinea => 'Enter shipping details and destination';
 
   @override
   String get submit => 'Submit';
@@ -194,7 +194,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get carTransportService => 'Car Transport Service';
 
   @override
-  String get enterCarTransportDetailsForGuinea => 'Enter car transport details for Guinea';
+  String get enterCarTransportDetailsForGuinea => 'Enter car transport details and destination';
 
   @override
   String get ownerName => 'Owner Name';
@@ -414,4 +414,292 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get admin => 'Admin';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get confirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get enterCurrentPassword => 'Enter your current password';
+
+  @override
+  String get enterNewPassword => 'Enter your new password';
+
+  @override
+  String get confirmNewPasswordField => 'Confirm your new password';
+
+  @override
+  String get updatePassword => 'Update Password';
+
+  @override
+  String get passwordChanged => 'Password Changed';
+
+  @override
+  String get passwordChangedSuccessfully => 'Your password has been changed successfully!';
+
+  @override
+  String get passwordsMustMatch => 'Passwords must match';
+
+  @override
+  String get newPasswordMinLength => 'New password must be at least 6 characters';
+
+  @override
+  String get passwordChangeRequired => 'Password Change Required';
+
+  @override
+  String get passwordChangeRequiredMessage => 'For security reasons, you need to change your password from the default one.';
+
+  @override
+  String get changePasswordNow => 'Change Password Now';
+
+  @override
+  String get skipForNow => 'Skip for Now';
+
+  @override
+  String get updateAccountPassword => 'Update your account password';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get enterFirstName => 'Enter first name';
+
+  @override
+  String get enterLastName => 'Enter last name';
+
+  @override
+  String get addStaffInfo => 'The new staff member will be created with a default password of \"123456\". They will be required to change it upon first login.';
+
+  @override
+  String get selectMake => 'Select Make';
+
+  @override
+  String get selectModel => 'Select Model';
+
+  @override
+  String get selectYear => 'Select Year';
+
+  @override
+  String get selectPriceRange => 'Select Price Range';
+
+  @override
+  String get selectMileageRange => 'Select Mileage Range';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get fuelType => 'Fuel Type';
+
+  @override
+  String get transmission => 'Transmission';
+
+  @override
+  String get bodyType => 'Body Type';
+
+  @override
+  String get condition => 'Condition';
+
+  @override
+  String get selectFuelType => 'Select Fuel Type';
+
+  @override
+  String get selectTransmission => 'Select Transmission';
+
+  @override
+  String get selectBodyType => 'Select Body Type';
+
+  @override
+  String get selectCondition => 'Select Condition';
+
+  @override
+  String get gasoline => 'Gasoline';
+
+  @override
+  String get diesel => 'Diesel';
+
+  @override
+  String get hybrid => 'Hybrid';
+
+  @override
+  String get electric => 'Electric';
+
+  @override
+  String get manual => 'Manual';
+
+  @override
+  String get automatic => 'Automatic';
+
+  @override
+  String get sedan => 'Sedan';
+
+  @override
+  String get suv => 'SUV';
+
+  @override
+  String get hatchback => 'Hatchback';
+
+  @override
+  String get coupe => 'Coupe';
+
+  @override
+  String get convertible => 'Convertible';
+
+  @override
+  String get pickup => 'Pickup';
+
+  @override
+  String get wagon => 'Wagon';
+
+  @override
+  String get excellent => 'Excellent';
+
+  @override
+  String get good => 'Good';
+
+  @override
+  String get fair => 'Fair';
+
+  @override
+  String get poor => 'Poor';
+
+  @override
+  String get pleaseEnterPhoneNumber => 'Please enter phone number';
+
+  @override
+  String get viewRecords => 'View Records';
+
+  @override
+  String get parkingRecords => 'Parking Records';
+
+  @override
+  String get packageRecords => 'Package Records';
+
+  @override
+  String get transportRecords => 'Transport Records';
+
+  @override
+  String get salesRecords => 'Sales Records';
+
+  @override
+  String get manageParkingRecords => 'Manage Parking Records';
+
+  @override
+  String get managePackageRecords => 'Manage Package Records';
+
+  @override
+  String get manageTransportRecords => 'Manage Transport Records';
+
+  @override
+  String get manageSalesRecords => 'Manage Sales Records';
+
+  @override
+  String get editRecord => 'Edit Record';
+
+  @override
+  String get deleteRecord => 'Delete Record';
+
+  @override
+  String get recordDeleted => 'Record deleted successfully';
+
+  @override
+  String get recordUpdated => 'Record updated successfully';
+
+  @override
+  String get confirmDelete => 'Are you sure you want to delete this record?';
+
+  @override
+  String get deleteConfirmation => 'Delete Confirmation';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get createdAt => 'Created At';
+
+  @override
+  String get destination => 'Destination';
+
+  @override
+  String get packageType => 'Package Type';
+
+  @override
+  String get weight => 'Weight';
+
+  @override
+  String get dimensions => 'Dimensions';
+
+  @override
+  String get transportMethod => 'Transport Method';
+
+  @override
+  String get pickupLocation => 'Pickup Location';
+
+  @override
+  String get deliveryLocation => 'Delivery Location';
+
+  @override
+  String get estimatedDelivery => 'Estimated Delivery';
+
+  @override
+  String get markSold => 'Mark Sold';
+
+  @override
+  String get sold => 'Sold';
+
+  @override
+  String get markCarAsSold => 'Mark Car as Sold';
+
+  @override
+  String get customerName => 'Customer Name';
+
+  @override
+  String get customerPhone => 'Customer Phone';
+
+  @override
+  String get salePrice => 'Sale Price';
+
+  @override
+  String get markAsSold => 'Mark as Sold';
+
+  @override
+  String get pleaseEnterAllFields => 'Please fill in all fields';
+
+  @override
+  String get carMarkedAsSoldSuccess => 'Car marked as sold and sales record created!';
+
+  @override
+  String get errorMarkingCarAsSold => 'Error marking car as sold';
+
+  @override
+  String get packageRecordCreated => 'Package record created successfully!';
+
+  @override
+  String get updatePackageStatus => 'Update Package Status';
+
+  @override
+  String get updateTransportStatus => 'Update Transport Status';
+
+  @override
+  String get currentStatus => 'Current Status';
+
+  @override
+  String get updateStatus => 'Update Status';
+
+  @override
+  String get statusUpdatedSuccessfully => 'Status updated successfully!';
+
+  @override
+  String get contactStaffForUpdates => 'Contact staff for status updates';
 }

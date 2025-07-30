@@ -20,6 +20,11 @@ import 'screens/forgot_password_screen.dart';
 import 'screens/car_details_screen.dart';
 import 'screens/user_management_screen.dart';
 import 'screens/add_staff_screen.dart';
+import 'screens/change_password_screen.dart';
+import 'screens/parking_records_screen.dart';
+import 'screens/package_records_screen.dart';
+import 'screens/transport_records_screen.dart';
+import 'screens/sales_records_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,17 +72,11 @@ class MyApp extends StatelessWidget {
               '/': (context) => const CustomerHomeScreen(),
               '/login': (context) => const LoginScreen(),
               '/forgot-password': (context) => const ForgotPasswordScreen(),
-              '/car-details':
-                  (context) => const CarDetailsScreen(
-                    imageUrl: '',
-                    title: '',
-                    year: '',
-                    mileage: '',
-                    price: '',
-                    description: '',
-                    features: [],
-                    sellerPhone: '',
-                  ),
+              '/car-details': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+                final carId = args?['carId'] as String? ?? '';
+                return CarDetailsScreen(carId: carId);
+              },
               // Staff-only routes (hidden from customers)
               '/staff-home': (context) => const StaffHomeScreen(),
               '/home-menu': (context) => const HomeMenu(),
@@ -88,6 +87,11 @@ class MyApp extends StatelessWidget {
               '/tracking': (context) => const TrackingScreen(),
               '/user-management': (context) => const UserManagementScreen(),
               '/add-staff': (context) => const AddStaffScreen(),
+              '/change-password': (context) => const ChangePasswordScreen(),
+              '/parking-records': (context) => const ParkingRecordsScreen(),
+              '/package-records': (context) => const PackageRecordsScreen(),
+              '/transport-records': (context) => const TransportRecordsScreen(),
+              '/sales-records': (context) => const SalesRecordsScreen(),
             },
           );
         },

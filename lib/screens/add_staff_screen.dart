@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/auth_provider.dart' as app_auth;
 
 class AddStaffScreen extends StatefulWidget {
   const AddStaffScreen({super.key});
@@ -12,13 +15,17 @@ class AddStaffScreen extends StatefulWidget {
 class _AddStaffScreenState extends State<AddStaffScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _phoneController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -32,29 +39,50 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
     });
 
     try {
-      // Get the Cloud Functions instance
-      final functions = FirebaseFunctions.instance;
+      // Get auth provider and ensure user is authenticated
+      final authProvider = Provider.of<app_auth.AuthProvider>(context, listen: false);
+      final user = FirebaseAuth.instance.currentUser;
+      
+      if (user == null || !authProvider.isAuthenticated) {
+        throw Exception('You must be logged in to perform this action');
+      }
+
+      // Refresh the auth token to ensure it's valid
+      await user.getIdToken(true);
+      
+      print('🔍 Current user: ${user.email}');
+      print('🔍 Auth provider state: authenticated=${authProvider.isAuthenticated}, admin=${authProvider.isAdmin}');
+
+      // Get the Cloud Functions instance and configure it properly
+      final functions = FirebaseFunctions.instanceFor(region: 'us-central1');
       final callable = functions.httpsCallable('createStaffUser');
 
       // Prepare the data to send to the Cloud Function
       final data = {
         'email': _emailController.text.trim(),
-        'firstName': 'Staff', // Default first name
-        'lastName': 'Member', // Default last name  
-        'phoneNumber': '',
+        'firstName': _firstNameController.text.trim(),
+        'lastName': _lastNameController.text.trim(), 
+        'phoneNumber': _phoneController.text.trim(),
         'role': 'staff',
       };
 
+      print('🔍 Calling createStaffUser with data: $data');
+      print('🔍 Current user: ${user.email}');
+
       // Call the Cloud Function
+      print('🚀 Calling Firebase Function with data: $data');
       final result = await callable.call(data);
+      print('✅ Function call successful: ${result.data}');
 
       if (mounted) {
         final resultData = result.data;
+        print('✅ Function result: $resultData');
+        
         if (resultData['success'] == true) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Staff member added successfully! ${resultData['emailSent'] ? 'Welcome email sent with auto-generated password.' : 'Note: Email sending failed, but user was created.'}',
+                AppLocalizations.of(context)!.staffMemberAddedSuccessfully,
               ),
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 5),
@@ -66,8 +94,10 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
         }
       }
     } catch (e) {
+      print('❌ Error adding staff: $e');
+      
       if (mounted) {
-        String errorMessage = 'Failed to add staff member';
+        String errorMessage = AppLocalizations.of(context)!.failedToAddStaffMember(e.toString());
         
         if (e is FirebaseFunctionsException) {
           switch (e.code) {
@@ -147,7 +177,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Info card explaining the process
+                    // Info card explaining the new process
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -164,7 +194,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'A secure password will be auto-generated and sent to the staff member via email.',
+                              AppLocalizations.of(context)!.addStaffInfo,
                               style: TextStyle(
                                 color: Colors.blue.shade700,
                                 fontSize: 14,
@@ -176,6 +206,73 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                     ),
                     const SizedBox(height: 24),
                     
+                    // First Name field
+                    TextFormField(
+                      controller: _firstNameController,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.firstName,
+                        hintText: AppLocalizations.of(context)!.enterFirstName,
+                        prefixIcon: const Icon(Icons.person_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1B365D),
+                            width: 2,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter first name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Last Name field
+                    TextFormField(
+                      controller: _lastNameController,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.lastName,
+                        hintText: AppLocalizations.of(context)!.enterLastName,
+                        prefixIcon: const Icon(Icons.person_outline),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1B365D),
+                            width: 2,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter last name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Email field
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -211,6 +308,34 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                         }
                         return null;
                       },
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Phone field (optional)
+                    TextFormField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.phoneNumber,
+                        hintText: 'Enter phone number (optional)',
+                        prefixIcon: const Icon(Icons.phone_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF1B365D),
+                            width: 2,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                      ),
                     ),
                     const SizedBox(height: 32),
                     

@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../widgets/language_toggle.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
+import 'forgot_password_screen.dart';
+import 'change_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -60,16 +62,40 @@ class _LoginScreenState extends State<LoginScreen>
       final success = await authProvider.authenticate(email, password);
 
       if (success && mounted) {
-        // Check if user is staff and navigate accordingly
-        if (authProvider.isStaff) {
-          Navigator.pushNamedAndRemoveUntil(
+        // Check if password reset is required
+        final needsPasswordReset = await authProvider.isPasswordResetRequired();
+        
+        if (needsPasswordReset) {
+          // Show password change screen as required
+          Navigator.push(
             context,
-            '/staff-home',
-            (route) => false,
-          );
+            MaterialPageRoute(
+              builder: (context) => const ChangePasswordScreen(isRequired: true),
+            ),
+          ).then((_) {
+            // After password change (or skip), navigate to appropriate home
+            if (authProvider.isStaff) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/staff-home',
+                (route) => false,
+              );
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            }
+          });
         } else {
-          // Regular customer - go to customer home
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          // Check if user is staff and navigate accordingly
+          if (authProvider.isStaff) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/staff-home',
+              (route) => false,
+            );
+          } else {
+            // Regular customer - go to customer home
+            Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          }
         }
       }
     } catch (error) {

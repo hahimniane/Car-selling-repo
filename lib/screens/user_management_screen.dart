@@ -172,15 +172,24 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             );
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddStaffScreen()),
+        floatingActionButton: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            // Only show add staff button for admins
+            if (!authProvider.isAdmin) {
+              return const SizedBox.shrink();
+            }
+            
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddStaffScreen()),
+                );
+              },
+              backgroundColor: Colors.white,
+              child: const Icon(Icons.add, color: Color(0xFF1B365D)),
             );
           },
-          backgroundColor: Colors.white,
-          child: const Icon(Icons.add, color: Color(0xFF1B365D)),
         ),
       ),
     );

@@ -1,9 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import '../widgets/language_toggle.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/auth_provider.dart';
 
-class SendBarrelScreen extends StatelessWidget {
+class SendBarrelScreen extends StatefulWidget {
   const SendBarrelScreen({super.key});
+
+  @override
+  State<SendBarrelScreen> createState() => _SendBarrelScreenState();
+}
+
+class _SendBarrelScreenState extends State<SendBarrelScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _senderNameController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _receiverNameController = TextEditingController();
+  final _receiverPhoneController = TextEditingController();
+  final _priceController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _senderNameController.dispose();
+    _addressController.dispose();
+    _receiverNameController.dispose();
+    _receiverPhoneController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final user = authProvider.user;
+
+      if (user == null) {
+        throw Exception('You must be logged in to submit a package record.');
+      }
+
+      // Generate a unique package ID and tracking number
+      final packageId = 'PKG_${DateTime.now().millisecondsSinceEpoch}';
+      final trackingNumber = 'TN${DateTime.now().year}${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}';
+
+      // Create package record in Firestore
+      await FirebaseFirestore.instance.collection('package_records').add({
+        'packageId': packageId,
+        'trackingNumber': trackingNumber,
+        'senderName': _senderNameController.text.trim(),
+        'senderAddress': _addressController.text.trim(),
+        'address': _addressController.text.trim(), // Keep for backward compatibility
+        'receiverName': _receiverNameController.text.trim(),
+        'receiverPhone': _receiverPhoneController.text.trim(),
+        'price': double.tryParse(_priceController.text.replaceAll(',', '')) ?? 0,
+        'priceRange': _priceController.text.trim(),
+        'destination': 'Guinea', // Default destination
+        'packageType': 'Barrel/Package', // Default type
+        'status': 'Pending', // Default status
+        'statusHistory': [
+          {
+            'status': 'Pending',
+            'timestamp': DateTime.now(),
+            'updatedBy': user.uid,
+            'updatedByEmail': user.email,
+          }
+        ],
+        'estimatedDelivery': DateTime.now().add(const Duration(days: 30)), // Default to creation date + 30 days
+        'createdBy': user.uid,
+        'createdByEmail': user.email,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      if (mounted) {
+        // Clear the form
+        _formKey.currentState!.reset();
+        _senderNameController.clear();
+        _addressController.clear();
+        _receiverNameController.clear();
+        _receiverPhoneController.clear();
+        _priceController.clear();
+
+        // Show success message with tracking number
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.packageRecordCreated}\nTracking Number: $trackingNumber'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error submitting package record: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,47 +247,106 @@ class SendBarrelScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Column(
-                          children: [
-                            _RoundedTextField(label: AppLocalizations.of(context)!.senderName),
-                            const SizedBox(height: 16),
-                            _RoundedTextField(label: AppLocalizations.of(context)!.address),
-                            const SizedBox(height: 16),
-                            _RoundedTextField(
-                              label: AppLocalizations.of(context)!.receiverName,
-                            ),
-                            const SizedBox(height: 16),
-                            _RoundedTextField(
-                              label: AppLocalizations.of(context)!.receiverPhone,
-                            ),
-                            const SizedBox(height: 16),
-                            _RoundedTextField(label: AppLocalizations.of(context)!.price),
-                            const SizedBox(height: 32),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 56,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF1B365D),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              _RoundedTextField(
+                                label: AppLocalizations.of(context)!.senderName,
+                                controller: _senderNameController,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter sender name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              _RoundedTextField(
+                                label: AppLocalizations.of(context)!.address,
+                                controller: _addressController,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter address';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              _RoundedTextField(
+                                label: AppLocalizations.of(context)!.receiverName,
+                                controller: _receiverNameController,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter receiver name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              _RoundedTextField(
+                                label: AppLocalizations.of(context)!.receiverPhone,
+                                controller: _receiverPhoneController,
+                                keyboardType: TextInputType.phone,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter receiver phone';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              _RoundedTextField(
+                                label: AppLocalizations.of(context)!.price,
+                                controller: _priceController,
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter price';
+                                  }
+                                  final price = double.tryParse(value.replaceAll(',', ''));
+                                  if (price == null || price <= 0) {
+                                    return 'Please enter a valid price';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 32),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 56,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF1B365D),
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 0,
+                                    splashFactory: NoSplash.splashFactory,
                                   ),
-                                  elevation: 0,
-                                  splashFactory: NoSplash.splashFactory,
-                                ),
-                                onPressed: () {},
-                                child: Text(
-                                  AppLocalizations.of(context)!.submit,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                                  onPressed: _isLoading ? null : _submitForm,
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          ),
+                                        )
+                                      : Text(
+                                          AppLocalizations.of(context)!.submit,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -191,11 +363,23 @@ class SendBarrelScreen extends StatelessWidget {
 
 class _RoundedTextField extends StatelessWidget {
   final String label;
-  const _RoundedTextField({required this.label});
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
+
+  const _RoundedTextField({
+    required this.label,
+    this.controller,
+    this.validator,
+    this.keyboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -206,6 +390,14 @@ class _RoundedTextField extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFF1B365D), width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
         filled: true,
         fillColor: Colors.grey.shade50,

@@ -5,6 +5,9 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/language_toggle.dart';
 import '../l10n/app_localizations.dart';
 
@@ -18,20 +21,51 @@ class ParkCarScreen extends StatefulWidget {
 class _ParkCarScreenState extends State<ParkCarScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _makeController = TextEditingController();
-  final _modelController = TextEditingController();
-  final _yearController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _vinController = TextEditingController();
+
+  // Dropdown selections
+  String? _selectedMake;
+  String? _selectedModel;
+  String? _selectedYear;
 
   DateTime _selectedDateTime = DateTime.now();
   bool _isLoading = false;
 
+  // Car data - same as add_car_screen.dart
+  final Map<String, List<String>> _carModels = {
+    'Toyota': ['Camry', 'Corolla', 'RAV4', 'Highlander', 'Prius', 'Tacoma', 'Tundra', 'Sienna', 'Avalon', 'Venza'],
+    'Honda': ['Accord', 'Civic', 'CR-V', 'Pilot', 'Odyssey', 'Ridgeline', 'Passport', 'HR-V', 'Insight', 'Fit'],
+    'Ford': ['F-150', 'Escape', 'Explorer', 'Mustang', 'Edge', 'Expedition', 'Ranger', 'Bronco', 'Fusion', 'Focus'],
+    'Chevrolet': ['Silverado', 'Equinox', 'Malibu', 'Traverse', 'Tahoe', 'Suburban', 'Camaro', 'Corvette', 'Blazer', 'Colorado'],
+    'Nissan': ['Altima', 'Sentra', 'Rogue', 'Pathfinder', 'Murano', 'Frontier', 'Titan', 'Armada', 'Maxima', 'Versa'],
+    'BMW': ['3 Series', '5 Series', '7 Series', 'X3', 'X5', 'X7', 'Z4', 'i3', 'i4', 'iX'],
+    'Mercedes-Benz': ['C-Class', 'E-Class', 'S-Class', 'GLC', 'GLE', 'GLS', 'A-Class', 'CLA', 'G-Class', 'SL'],
+    'Audi': ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8', 'TT', 'R8'],
+    'Volkswagen': ['Jetta', 'Passat', 'Tiguan', 'Atlas', 'Golf', 'Beetle', 'Arteon', 'ID.4', 'Taos', 'Atlas Cross Sport'],
+    'Hyundai': ['Elantra', 'Sonata', 'Tucson', 'Santa Fe', 'Palisade', 'Veloster', 'Genesis', 'Kona', 'Venue', 'Nexo'],
+    'Kia': ['Forte', 'Optima', 'Sorento', 'Telluride', 'Sportage', 'Soul', 'Stinger', 'Niro', 'Seltos', 'Carnival'],
+    'Mazda': ['Mazda3', 'Mazda6', 'CX-5', 'CX-9', 'MX-5 Miata', 'CX-30', 'CX-50', 'Mazda2', 'CX-3', 'RX-8'],
+    'Subaru': ['Outback', 'Forester', 'Impreza', 'Legacy', 'Ascent', 'Crosstrek', 'WRX', 'BRZ', 'Tribeca', 'Baja'],
+    'Jeep': ['Wrangler', 'Grand Cherokee', 'Cherokee', 'Compass', 'Renegade', 'Gladiator', 'Grand Wagoneer', 'Wagoneer', 'Patriot', 'Liberty'],
+    'Ram': ['1500', '2500', '3500', 'ProMaster', 'ProMaster City'],
+    'GMC': ['Sierra', 'Terrain', 'Acadia', 'Yukon', 'Canyon', 'Savana', 'Envoy', 'Jimmy'],
+    'Cadillac': ['Escalade', 'XT5', 'XT6', 'CT5', 'CT4', 'Lyriq', 'Celestiq'],
+    'Lincoln': ['Navigator', 'Aviator', 'Corsair', 'Nautilus', 'Continental', 'MKZ'],
+    'Infiniti': ['Q50', 'Q60', 'QX50', 'QX60', 'QX80', 'Q70', 'QX30'],
+    'Acura': ['TLX', 'ILX', 'RDX', 'MDX', 'NSX', 'Integra', 'ZDX'],
+    'Lexus': ['ES', 'IS', 'GS', 'LS', 'RX', 'GX', 'LX', 'NX', 'UX', 'LC'],
+  };
+
+  List<String> get _availableModels {
+    if (_selectedMake == null) return [];
+    return _carModels[_selectedMake] ?? [];
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
-    _makeController.dispose();
-    _modelController.dispose();
-    _yearController.dispose();
+    _phoneController.dispose();
     _vinController.dispose();
     super.dispose();
   }
@@ -164,8 +198,12 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
     });
 
     try {
+      // Save to database first
+      await _saveParkingRecord();
+      
       // Generate PDF
       final pdf = pw.Document();
+      final receiptNumber = 'RCP-${DateTime.now().millisecondsSinceEpoch}';
 
       pdf.addPage(
         pw.Page(
@@ -197,7 +235,7 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
                       ),
                       pw.SizedBox(height: 10),
                       pw.Text(
-                        'Business Services',
+                        'TAAO Auto Business Services',
                         style: pw.TextStyle(
                           fontSize: 16,
                           color: PdfColors.white,
@@ -231,27 +269,20 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
                       ),
                       pw.SizedBox(height: 15),
 
+                      _buildReceiptRow('Receipt Number:', receiptNumber),
                       _buildReceiptRow(
-                        'Receipt Number:',
-                        'RCP-${DateTime.now().millisecondsSinceEpoch}',
-                      ),
-                      _buildReceiptRow(
-                        'Date & Time:',
-                        DateFormat(
-                          'MMM dd, yyyy - HH:mm',
-                        ).format(_selectedDateTime),
+                        'Parking Date & Time:',
+                        DateFormat('MMM dd, yyyy - HH:mm').format(_selectedDateTime),
                       ),
                       _buildReceiptRow(
                         'Generated On:',
-                        DateFormat(
-                          'MMM dd, yyyy - HH:mm',
-                        ).format(DateTime.now()),
+                        DateFormat('MMM dd, yyyy - HH:mm').format(DateTime.now()),
                       ),
 
                       pw.SizedBox(height: 20),
 
                       pw.Text(
-                        'Car Information',
+                        'Owner Information',
                         style: pw.TextStyle(
                           fontSize: 18,
                           fontWeight: pw.FontWeight.bold,
@@ -260,9 +291,22 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
                       pw.SizedBox(height: 15),
 
                       _buildReceiptRow('Owner Name:', _nameController.text),
-                      _buildReceiptRow('Car Make:', _makeController.text),
-                      _buildReceiptRow('Car Model:', _modelController.text),
-                      _buildReceiptRow('Year:', _yearController.text),
+                      _buildReceiptRow('Phone Number:', _phoneController.text),
+
+                      pw.SizedBox(height: 20),
+
+                      pw.Text(
+                        'Vehicle Information',
+                        style: pw.TextStyle(
+                          fontSize: 18,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.SizedBox(height: 15),
+
+                      _buildReceiptRow('Make:', _selectedMake ?? ''),
+                      _buildReceiptRow('Model:', _selectedModel ?? ''),
+                      _buildReceiptRow('Year:', _selectedYear ?? ''),
                       _buildReceiptRow('VIN Number:', _vinController.text),
 
                       pw.SizedBox(height: 20),
@@ -288,7 +332,7 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
                             ),
                             pw.SizedBox(height: 5),
                             pw.Text(
-                              'Vehicle has been successfully parked',
+                              'Vehicle has been successfully parked and secured',
                               style: pw.TextStyle(
                                 fontSize: 12,
                                 color: PdfColors.grey700,
@@ -324,7 +368,8 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
                               '• This receipt serves as proof of parking\n'
                               '• Vehicle will be stored securely\n'
                               '• Contact us for any inquiries\n'
-                              '• Valid until vehicle is retrieved',
+                              '• Valid until vehicle is retrieved\n'
+                              '• Keep this receipt for vehicle pickup',
                               style: pw.TextStyle(
                                 fontSize: 10,
                                 color: PdfColors.grey700,
@@ -372,6 +417,36 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _saveParkingRecord() async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final user = authProvider.user;
+
+      if (user == null) {
+        throw Exception('You must be logged in to save parking records.');
+      }
+
+      final receiptNumber = 'RCP-${DateTime.now().millisecondsSinceEpoch}';
+      
+      await FirebaseFirestore.instance.collection('parking_records').add({
+        'receiptNumber': receiptNumber,
+        'ownerName': _nameController.text.trim(),
+        'phoneNumber': _phoneController.text.trim(),
+        'make': _selectedMake,
+        'model': _selectedModel,
+        'year': int.tryParse(_selectedYear ?? '0') ?? 0,
+        'vinNumber': _vinController.text.trim(),
+        'parkingDateTime': Timestamp.fromDate(_selectedDateTime),
+        'status': 'Active',
+        'createdAt': FieldValue.serverTimestamp(),
+        'createdBy': user.uid,
+        'staffEmail': user.email,
+      });
+    } catch (e) {
+      throw Exception('Failed to save parking record: $e');
     }
   }
 
@@ -539,38 +614,65 @@ class _ParkCarScreenState extends State<ParkCarScreen> {
                               ),
                               const SizedBox(height: 16),
                               _RoundedTextField(
-                                controller: _makeController,
-                                label: AppLocalizations.of(context)!.make,
+                                controller: _phoneController,
+                                label: AppLocalizations.of(context)!.phoneNumber,
+                                keyboardType: TextInputType.phone,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return AppLocalizations.of(context)!.pleaseEnterCarMake;
+                                    return AppLocalizations.of(context)!.pleaseEnterPhoneNumber;
                                   }
                                   return null;
                                 },
                               ),
                               const SizedBox(height: 16),
-                              _RoundedTextField(
-                                controller: _modelController,
-                                label: AppLocalizations.of(context)!.model,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return AppLocalizations.of(context)!.pleaseEnterCarModel;
-                                  }
-                                  return null;
+                              
+                              // Make and Model Dropdowns
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildDropdown<String>(
+                                      value: _selectedMake,
+                                      hint: AppLocalizations.of(context)!.selectMake,
+                                      items: _carModels.keys.toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedMake = value;
+                                          _selectedModel = null; // Reset model when make changes
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: _buildDropdown<String>(
+                                      value: _selectedModel,
+                                      hint: AppLocalizations.of(context)!.selectModel,
+                                      items: _availableModels,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedModel = value;
+                                        });
+                                      },
+                                      enabled: _selectedMake != null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              
+                              // Year Dropdown
+                              _buildDropdown<String>(
+                                value: _selectedYear,
+                                hint: AppLocalizations.of(context)!.selectYear,
+                                items: List.generate(30, (index) => (DateTime.now().year - index).toString()),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedYear = value;
+                                  });
                                 },
                               ),
                               const SizedBox(height: 16),
-                              _RoundedTextField(
-                                controller: _yearController,
-                                label: AppLocalizations.of(context)!.year,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return AppLocalizations.of(context)!.pleaseEnterCarYear;
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
+                              
                               _RoundedTextField(
                                 controller: _vinController,
                                 label: AppLocalizations.of(context)!.vinNumber,
@@ -710,11 +812,13 @@ class _RoundedTextField extends StatelessWidget {
   final String label;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   const _RoundedTextField({
     required this.label,
     this.controller,
     this.validator,
+    this.keyboardType,
   });
 
   @override
@@ -722,6 +826,7 @@ class _RoundedTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -743,3 +848,52 @@ class _RoundedTextField extends StatelessWidget {
     );
   }
 }
+
+  Widget _buildDropdown<T>({
+    required T? value,
+    required String hint,
+    required List<T> items,
+    required void Function(T?) onChanged,
+    bool enabled = true,
+  }) {
+    return DropdownButtonFormField<T>(
+      value: value,
+      isExpanded: true,
+      decoration: InputDecoration(
+        hintText: hint,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF1B365D), width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        filled: true,
+        fillColor: enabled ? Colors.grey.shade50 : Colors.grey.shade100,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+      items: items.map((item) {
+        return DropdownMenuItem<T>(
+          value: item,
+          child: Text(
+            item.toString(),
+            style: const TextStyle(fontSize: 16),
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      }).toList(),
+      onChanged: enabled ? onChanged : null,
+      validator: (value) {
+        if (value == null) {
+          return 'Please select $hint';
+        }
+        return null;
+      },
+    );
+  }

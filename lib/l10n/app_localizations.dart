@@ -242,7 +242,7 @@ abstract class AppLocalizations {
   /// No description provided for @sendBarrelsToGuinea.
   ///
   /// In en, this message translates to:
-  /// **'Send Barrels to Guinea'**
+  /// **'Package Shipping'**
   String get sendBarrelsToGuinea;
 
   /// No description provided for @transportCarsToGuinea.
@@ -410,13 +410,13 @@ abstract class AppLocalizations {
   /// No description provided for @barrelShippingService.
   ///
   /// In en, this message translates to:
-  /// **'Barrel Shipping Service'**
+  /// **'Package Shipping Service'**
   String get barrelShippingService;
 
   /// No description provided for @enterShippingDetailsForGuinea.
   ///
   /// In en, this message translates to:
-  /// **'Enter shipping details for Guinea'**
+  /// **'Enter shipping details and destination'**
   String get enterShippingDetailsForGuinea;
 
   /// No description provided for @submit.
@@ -464,7 +464,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterCarTransportDetailsForGuinea.
   ///
   /// In en, this message translates to:
-  /// **'Enter car transport details for Guinea'**
+  /// **'Enter car transport details and destination'**
   String get enterCarTransportDetailsForGuinea;
 
   /// No description provided for @ownerName.
@@ -880,6 +880,582 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin'**
   String get admin;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get currentPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm New Password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @enterCurrentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current password'**
+  String get enterCurrentPassword;
+
+  /// No description provided for @enterNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your new password'**
+  String get enterNewPassword;
+
+  /// No description provided for @confirmNewPasswordField.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your new password'**
+  String get confirmNewPasswordField;
+
+  /// No description provided for @updatePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Password'**
+  String get updatePassword;
+
+  /// No description provided for @passwordChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Password Changed'**
+  String get passwordChanged;
+
+  /// No description provided for @passwordChangedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been changed successfully!'**
+  String get passwordChangedSuccessfully;
+
+  /// No description provided for @passwordsMustMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords must match'**
+  String get passwordsMustMatch;
+
+  /// No description provided for @newPasswordMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'New password must be at least 6 characters'**
+  String get newPasswordMinLength;
+
+  /// No description provided for @passwordChangeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password Change Required'**
+  String get passwordChangeRequired;
+
+  /// No description provided for @passwordChangeRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'For security reasons, you need to change your password from the default one.'**
+  String get passwordChangeRequiredMessage;
+
+  /// No description provided for @changePasswordNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password Now'**
+  String get changePasswordNow;
+
+  /// No description provided for @skipForNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for Now'**
+  String get skipForNow;
+
+  /// No description provided for @updateAccountPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your account password'**
+  String get updateAccountPassword;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @enterFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter first name'**
+  String get enterFirstName;
+
+  /// No description provided for @enterLastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter last name'**
+  String get enterLastName;
+
+  /// No description provided for @addStaffInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The new staff member will be created with a default password of \"123456\". They will be required to change it upon first login.'**
+  String get addStaffInfo;
+
+  /// No description provided for @selectMake.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Make'**
+  String get selectMake;
+
+  /// No description provided for @selectModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Model'**
+  String get selectModel;
+
+  /// No description provided for @selectYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Year'**
+  String get selectYear;
+
+  /// No description provided for @selectPriceRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Price Range'**
+  String get selectPriceRange;
+
+  /// No description provided for @selectMileageRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Mileage Range'**
+  String get selectMileageRange;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @fuelType.
+  ///
+  /// In en, this message translates to:
+  /// **'Fuel Type'**
+  String get fuelType;
+
+  /// No description provided for @transmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Transmission'**
+  String get transmission;
+
+  /// No description provided for @bodyType.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Type'**
+  String get bodyType;
+
+  /// No description provided for @condition.
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get condition;
+
+  /// No description provided for @selectFuelType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fuel Type'**
+  String get selectFuelType;
+
+  /// No description provided for @selectTransmission.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Transmission'**
+  String get selectTransmission;
+
+  /// No description provided for @selectBodyType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Body Type'**
+  String get selectBodyType;
+
+  /// No description provided for @selectCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Condition'**
+  String get selectCondition;
+
+  /// No description provided for @gasoline.
+  ///
+  /// In en, this message translates to:
+  /// **'Gasoline'**
+  String get gasoline;
+
+  /// No description provided for @diesel.
+  ///
+  /// In en, this message translates to:
+  /// **'Diesel'**
+  String get diesel;
+
+  /// No description provided for @hybrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Hybrid'**
+  String get hybrid;
+
+  /// No description provided for @electric.
+  ///
+  /// In en, this message translates to:
+  /// **'Electric'**
+  String get electric;
+
+  /// No description provided for @manual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get manual;
+
+  /// No description provided for @automatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get automatic;
+
+  /// No description provided for @sedan.
+  ///
+  /// In en, this message translates to:
+  /// **'Sedan'**
+  String get sedan;
+
+  /// No description provided for @suv.
+  ///
+  /// In en, this message translates to:
+  /// **'SUV'**
+  String get suv;
+
+  /// No description provided for @hatchback.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatchback'**
+  String get hatchback;
+
+  /// No description provided for @coupe.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupe'**
+  String get coupe;
+
+  /// No description provided for @convertible.
+  ///
+  /// In en, this message translates to:
+  /// **'Convertible'**
+  String get convertible;
+
+  /// No description provided for @pickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup'**
+  String get pickup;
+
+  /// No description provided for @wagon.
+  ///
+  /// In en, this message translates to:
+  /// **'Wagon'**
+  String get wagon;
+
+  /// No description provided for @excellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get excellent;
+
+  /// No description provided for @good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good;
+
+  /// No description provided for @fair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get fair;
+
+  /// No description provided for @poor.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get poor;
+
+  /// No description provided for @pleaseEnterPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter phone number'**
+  String get pleaseEnterPhoneNumber;
+
+  /// No description provided for @viewRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'View Records'**
+  String get viewRecords;
+
+  /// No description provided for @parkingRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking Records'**
+  String get parkingRecords;
+
+  /// No description provided for @packageRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Package Records'**
+  String get packageRecords;
+
+  /// No description provided for @transportRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport Records'**
+  String get transportRecords;
+
+  /// No description provided for @salesRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Records'**
+  String get salesRecords;
+
+  /// No description provided for @manageParkingRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Parking Records'**
+  String get manageParkingRecords;
+
+  /// No description provided for @managePackageRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Package Records'**
+  String get managePackageRecords;
+
+  /// No description provided for @manageTransportRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Transport Records'**
+  String get manageTransportRecords;
+
+  /// No description provided for @manageSalesRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Sales Records'**
+  String get manageSalesRecords;
+
+  /// No description provided for @editRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Record'**
+  String get editRecord;
+
+  /// No description provided for @deleteRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Record'**
+  String get deleteRecord;
+
+  /// No description provided for @recordDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Record deleted successfully'**
+  String get recordDeleted;
+
+  /// No description provided for @recordUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Record updated successfully'**
+  String get recordUpdated;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this record?'**
+  String get confirmDelete;
+
+  /// No description provided for @deleteConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Confirmation'**
+  String get deleteConfirmation;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @createdAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Created At'**
+  String get createdAt;
+
+  /// No description provided for @destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get destination;
+
+  /// No description provided for @packageType.
+  ///
+  /// In en, this message translates to:
+  /// **'Package Type'**
+  String get packageType;
+
+  /// No description provided for @weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// No description provided for @dimensions.
+  ///
+  /// In en, this message translates to:
+  /// **'Dimensions'**
+  String get dimensions;
+
+  /// No description provided for @transportMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport Method'**
+  String get transportMethod;
+
+  /// No description provided for @pickupLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Location'**
+  String get pickupLocation;
+
+  /// No description provided for @deliveryLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Location'**
+  String get deliveryLocation;
+
+  /// No description provided for @estimatedDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Delivery'**
+  String get estimatedDelivery;
+
+  /// No description provided for @markSold.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Sold'**
+  String get markSold;
+
+  /// No description provided for @sold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get sold;
+
+  /// No description provided for @markCarAsSold.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Car as Sold'**
+  String get markCarAsSold;
+
+  /// No description provided for @customerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Name'**
+  String get customerName;
+
+  /// No description provided for @customerPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Phone'**
+  String get customerPhone;
+
+  /// No description provided for @salePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale Price'**
+  String get salePrice;
+
+  /// No description provided for @markAsSold.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Sold'**
+  String get markAsSold;
+
+  /// No description provided for @pleaseEnterAllFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all fields'**
+  String get pleaseEnterAllFields;
+
+  /// No description provided for @carMarkedAsSoldSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Car marked as sold and sales record created!'**
+  String get carMarkedAsSoldSuccess;
+
+  /// No description provided for @errorMarkingCarAsSold.
+  ///
+  /// In en, this message translates to:
+  /// **'Error marking car as sold'**
+  String get errorMarkingCarAsSold;
+
+  /// No description provided for @packageRecordCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Package record created successfully!'**
+  String get packageRecordCreated;
+
+  /// No description provided for @updatePackageStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Package Status'**
+  String get updatePackageStatus;
+
+  /// No description provided for @updateTransportStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Transport Status'**
+  String get updateTransportStatus;
+
+  /// No description provided for @currentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Status'**
+  String get currentStatus;
+
+  /// No description provided for @updateStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Status'**
+  String get updateStatus;
+
+  /// No description provided for @statusUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated successfully!'**
+  String get statusUpdatedSuccessfully;
+
+  /// No description provided for @contactStaffForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact staff for status updates'**
+  String get contactStaffForUpdates;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

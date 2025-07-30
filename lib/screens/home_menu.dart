@@ -2,8 +2,27 @@ import 'package:flutter/material.dart';
 import '../widgets/language_toggle.dart';
 import '../l10n/app_localizations.dart';
 
-class HomeMenu extends StatelessWidget {
+class HomeMenu extends StatefulWidget {
   const HomeMenu({super.key});
+
+  @override
+  State<HomeMenu> createState() => _HomeMenuState();
+}
+
+class _HomeMenuState extends State<HomeMenu> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +38,7 @@ class HomeMenu extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              // Language Toggle at the top
+              // Header with language toggle
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
@@ -27,147 +46,251 @@ class HomeMenu extends StatelessWidget {
                   child: const LanguageToggle(),
                 ),
               ),
-              // Main content
-              Expanded(
-                child: Padding(
+              
+              // Welcome Section
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.06,
+                ),
+                child: Container(
+                  width: double.infinity,
                   padding: EdgeInsets.all(
-                    MediaQuery.of(context).size.width * 0.06,
+                    MediaQuery.of(context).size.width * 0.04,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1,
+                    ),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 24),
-
-                      // Welcome Section
                       Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.width * 0.04,
-                        ),
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
-                            width: 1,
-                          ),
+                          borderRadius: BorderRadius.circular(30),
                         ),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Image.asset(
-                                  'assets/logo.png',
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              AppLocalizations.of(context)!.welcomeToBusinessServices,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              AppLocalizations.of(context)!.chooseServiceToStart,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white70,
-                              ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                          ],
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: Image.asset(
+                            'assets/logo.png',
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
-
-                      const SizedBox(height: 20),
-
-                      // Menu Buttons
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(
-                            MediaQuery.of(context).size.width * 0.06,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 20,
-                                offset: const Offset(0, 10),
-                              ),
-                            ],
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                _MenuButton(
-                                  title: AppLocalizations.of(context)!.parkACar,
-                                  icon: Icons.local_parking,
-                                  onTap:
-                                      () =>
-                                          Navigator.pushNamed(context, '/park'),
-                                ),
-                                const SizedBox(height: 12),
-                                _MenuButton(
-                                  title: AppLocalizations.of(context)!.sendBarrelsToGuinea,
-                                  icon: Icons.local_shipping,
-                                  onTap:
-                                      () => Navigator.pushNamed(
-                                        context,
-                                        '/barrel',
-                                      ),
-                                ),
-                                const SizedBox(height: 12),
-                                _MenuButton(
-                                  title: AppLocalizations.of(context)!.transportCarsToGuinea,
-                                  icon: Icons.directions_car,
-                                  onTap:
-                                      () => Navigator.pushNamed(
-                                        context,
-                                        '/transport',
-                                      ),
-                                ),
-                                const SizedBox(height: 12),
-                                _MenuButton(
-                                  title: AppLocalizations.of(context)!.sellCars,
-                                  icon: Icons.sell,
-                                  onTap:
-                                      () =>
-                                          Navigator.pushNamed(context, '/sell'),
-                                ),
-                                const SizedBox(height: 12),
-                              ],
-                            ),
-                          ),
+                      const SizedBox(height: 12),
+                      Text(
+                        AppLocalizations.of(context)!.welcomeToBusinessServices,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        AppLocalizations.of(context)!.chooseServiceToStart,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
                     ],
                   ),
                 ),
               ),
+
+              const SizedBox(height: 20),
+
+              // Tab Bar
+              Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.06,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: TabBar(
+                  controller: _tabController,
+                  indicator: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: Colors.transparent,
+                  labelColor: const Color(0xFF1B365D),
+                  unselectedLabelColor: Colors.white,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                  tabs: const [
+                    Tab(
+                      icon: Icon(Icons.business_center),
+                      text: 'Services',
+                    ),
+                    Tab(
+                      icon: Icon(Icons.folder_open),
+                      text: 'Records',
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Tab Content
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.06,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      // Services Tab
+                      _buildServicesTab(),
+                      // Records Tab
+                      _buildRecordsTab(),
+                    ],
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 20),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildServicesTab() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Text(
+            'Create New Records',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.parkACar,
+                    icon: Icons.local_parking,
+                    onTap: () => Navigator.pushNamed(context, '/park'),
+                  ),
+                  const SizedBox(height: 12),
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.sendBarrelsToGuinea,
+                    icon: Icons.local_shipping,
+                    onTap: () => Navigator.pushNamed(context, '/barrel'),
+                  ),
+                  const SizedBox(height: 12),
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.transportCarsToGuinea,
+                    icon: Icons.directions_car,
+                    onTap: () => Navigator.pushNamed(context, '/transport'),
+                  ),
+                  const SizedBox(height: 12),
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.sellCars,
+                    icon: Icons.sell,
+                    onTap: () => Navigator.pushNamed(context, '/sell'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecordsTab() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Text(
+            'View & Manage Records',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.manageParkingRecords,
+                    icon: Icons.local_parking_outlined,
+                    onTap: () => Navigator.pushNamed(context, '/parking-records'),
+                  ),
+                  const SizedBox(height: 12),
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.managePackageRecords,
+                    icon: Icons.inventory_2_outlined,
+                    onTap: () => Navigator.pushNamed(context, '/package-records'),
+                  ),
+                  const SizedBox(height: 12),
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.manageTransportRecords,
+                    icon: Icons.airport_shuttle_outlined,
+                    onTap: () => Navigator.pushNamed(context, '/transport-records'),
+                  ),
+                  const SizedBox(height: 12),
+                  _MenuButton(
+                    title: AppLocalizations.of(context)!.manageSalesRecords,
+                    icon: Icons.point_of_sale_outlined,
+                    onTap: () => Navigator.pushNamed(context, '/sales-records'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

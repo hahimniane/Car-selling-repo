@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/auth_provider.dart';
+import 'customer_home_screen.dart';
+import 'staff_home_screen.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -51,21 +55,51 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     // Start animations
-    _startAnimations();
+    _initializeApp();
   }
 
-  void _startAnimations() async {
-    // Start logo animation
-    await _logoController.forward();
-
-    // Start text animation after logo
-    await Future.delayed(const Duration(milliseconds: 300));
-    _textController.forward();
-
-    // Navigate to customer home after animations complete
-    await Future.delayed(const Duration(milliseconds: 2000));
+  Future<void> _initializeApp() async {
+    // Start logo animation immediately
+    _logoController.forward();
+    
+    // Start text animation after a delay
+    await Future.delayed(const Duration(milliseconds: 800));
     if (mounted) {
-      Navigator.pushReplacementNamed(context, '/');
+      _textController.forward();
+    }
+
+    // Listen to the initialization state of the AuthProvider
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    // Wait at least 3 seconds for branding effect
+    await Future.delayed(const Duration(seconds: 3));
+
+    // If already initialized, navigate immediately
+    if (authProvider.isInitialized) {
+      _navigate(authProvider);
+    } else {
+      // Otherwise, wait for initialization
+      authProvider.addListener(() {
+        if (authProvider.isInitialized) {
+          _navigate(authProvider);
+        }
+      });
+    }
+  }
+
+  void _navigate(AuthProvider authProvider) {
+    if (mounted) {
+      if (authProvider.isAuthenticated && authProvider.isStaff) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const StaffHomeScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const CustomerHomeScreen()),
+        );
+      }
     }
   }
 

@@ -11,6 +11,7 @@ class AuthProvider extends ChangeNotifier {
   bool _isAdmin = false;
   String? _userEmail;
   bool _isLoading = false;
+  bool _isInitialized = false;
 
   User? get user => _user;
   bool get isStaff => _isStaff;
@@ -18,18 +19,20 @@ class AuthProvider extends ChangeNotifier {
   String? get userEmail => _userEmail;
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _user != null;
+  bool get isInitialized => _isInitialized;
 
   AuthProvider() {
-    _auth.authStateChanges().listen((User? user) {
+    _auth.authStateChanges().listen((User? user) async {
       _user = user;
       if (user != null) {
         _userEmail = user.email;
-        _checkUserRole();
+        await _checkUserRole();
       } else {
         _isStaff = false;
         _isAdmin = false;
         _userEmail = null;
       }
+      _isInitialized = true;
       notifyListeners();
     });
   }
@@ -56,7 +59,7 @@ class AuthProvider extends ChangeNotifier {
           // Create user profile if it doesn't exist
           await _createUserProfile();
         }
-        notifyListeners();
+        // No need to call notifyListeners() here as it is called after this function in the listener
       } catch (e) {
         print('❌ Error checking user role: $e');
       }
@@ -249,6 +252,70 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       print('Error adding staff user: $e');
       throw 'An unexpected error occurred while adding the staff user.';
+    }
+  }
+
+  // Method to change user password
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    if (_user == null) {
+      throw 'No user is currently logged in.';
+    }
+
+    try {
+      // Re-authenticate the user with their current password
+      final credential = EmailAuthProvider.credential(
+        email: _user!.email!,
+        password: currentPassword,
+      );
+      
+      await _user!.reauthenticateWithCredential(credential);
+      
+      // Update the password
+      await _user!.updatePassword(newPassword);
+      
+      // Update the passwordResetRequired flag in Firestore if it exists
+      await _firestore.collection('users').doc(_user!.uid).update({
+        'passwordResetRequired': false,
+        'passwordLastChanged': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      
+      print('✅ Password changed successfully');
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      switch (e.code) {
+        case 'wrong-password':
+          errorMessage = 'Current password is incorrect.';
+          break;
+        case 'weak-password':
+          errorMessage = 'New password is too weak. Please choose a stronger password.';
+          break;
+        case 'requires-recent-login':
+          errorMessage = 'Please log out and log back in before changing your password.';
+          break;
+        default:
+          errorMessage = 'Failed to change password: ${e.message}';
+      }
+      throw errorMessage;
+    } catch (e) {
+      print('❌ Error changing password: $e');
+      throw 'An unexpected error occurred while changing the password.';
+    }
+  }
+
+  // Method to check if password reset is required
+  Future<bool> isPasswordResetRequired() async {
+    if (_user == null) return false;
+    
+    try {
+      final userDoc = await _firestore.collection('users').doc(_user!.uid).get();
+      if (userDoc.exists) {
+        return userDoc.data()?['passwordResetRequired'] ?? false;
+      }
+      return false;
+    } catch (e) {
+      print('❌ Error checking password reset requirement: $e');
+      return false;
     }
   }
 }
